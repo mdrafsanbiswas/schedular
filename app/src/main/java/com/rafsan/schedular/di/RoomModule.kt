@@ -18,4 +18,5 @@ object RoomModule {
     fun provideDatabase(app: Application) : AppDatabase =
         Room.databaseBuilder(app, AppDatabase::class.java, "schedules")
             .build()
+
 }

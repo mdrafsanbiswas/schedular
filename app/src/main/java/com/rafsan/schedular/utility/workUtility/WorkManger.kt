@@ -36,4 +36,8 @@ class WorkManagerHelper(val context: Context) {
                 }
             }
     }
+
+    fun cancelAllWorkByTag(packageName: String) {
+        workManager.cancelAllWorkByTag(packageName)
+    }
 }

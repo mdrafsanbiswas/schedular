@@ -8,8 +8,9 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class MyApplication : Application(), Configuration.Provider {
 
-    override fun getWorkManagerConfiguration() =
-        Configuration.Builder()
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setMinimumLoggingLevel(Log.DEBUG)
             .build()
 
