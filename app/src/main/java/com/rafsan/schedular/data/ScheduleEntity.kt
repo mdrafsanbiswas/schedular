@@ -5,8 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "schedules")
 data class ScheduleEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val packageName: String,
-    val scheduleTime: Long,
-    val completed: Boolean = false
+    @PrimaryKey val packageName: String,
+    val appName: String = "",
+    val scheduleTime: Long? = null,
+    val completed: Boolean = false,
+    val isScheduled: Boolean = false,
+    val appIcon: ByteArray? = null
 )

@@ -2,45 +2,46 @@ package com.rafsan.schedular.ui
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import com.rafsan.schedular.ui.theme.SchedularTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
+import com.google.gson.Gson
+import com.rafsan.schedular.data.AppInfo
+import com.rafsan.schedular.data.ScheduleEntity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel : ScheduleViewModel by viewModels()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,24 +57,32 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        viewModel.insertAllApps(data = getInstalledApps(this))
 
+        lifecycleScope.launch {
+            viewModel.allApps.collectLatest {
+                Log.d("app_data","${Gson().toJson(it)}")
+            }
+        }
 
         setContent {
+
+            val data = viewModel.allApps.collectAsState().value
+
             SchedularTheme {
                 InstalledAppsList(
-                    installedApps = getInstalledApps(this),
+                    installedApps = data,
                     onAppClick = {
                          viewModel.scheduleAppLaunch(
-                             it.packageName,
+                             it,
                              10
                          )
-                    }
+                    },
+
                 )
             }
         }
     }
-
-    data class AppInfo(val appName: String, val packageName: String, val appIcon: Drawable)
 
     private fun getInstalledApps(context: Context): List<AppInfo> {
         val pm = context.packageManager
@@ -94,7 +103,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun InstalledAppsList(installedApps: List<MainActivity.AppInfo>, onAppClick: (MainActivity.AppInfo) -> Unit) {
+fun InstalledAppsList(installedApps: List<ScheduleEntity>, onAppClick: (String) -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -103,9 +112,9 @@ fun InstalledAppsList(installedApps: List<MainActivity.AppInfo>, onAppClick: (Ma
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .clickable { onAppClick(app) },
+                    .clickable { onAppClick(app.packageName) },
             ) {
-                Row(modifier = Modifier.padding(16.dp)) {
+                Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         painter = rememberAsyncImagePainter(app.appIcon),
                         contentDescription = app.appName,

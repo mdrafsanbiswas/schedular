@@ -6,16 +6,20 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.Data
+import com.rafsan.schedular.data.AppDatabase
+import com.rafsan.schedular.data.AppInfo
+import javax.inject.Inject
 
 class AppLaunchWorker(
     context: Context,
     workerParams: WorkerParameters
-) : Worker(context, workerParams) {
+) : CoroutineWorker(context, workerParams) {
 
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         val packageName = inputData.getString("packageName") ?: return Result.failure()
         Log.d("AppLaunchWorker", "Attempting to launch app: $packageName")
 
@@ -47,6 +51,7 @@ class AppLaunchWorker(
     }
 
     private fun notifyUserToLaunchApp(packageName: String) {
+
         val notificationManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
