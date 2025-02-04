@@ -1,3 +1,5 @@
+package com.rafsan.schedular.utility.workUtility
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -6,28 +8,31 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
-import androidx.work.Worker
 import androidx.work.WorkerParameters
-import androidx.work.Data
-import com.rafsan.schedular.data.AppDatabase
-import com.rafsan.schedular.data.AppInfo
+import com.rafsan.schedular.data.ScheduleEntity
+import com.rafsan.schedular.repo.ScheduleRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import javax.inject.Inject
 
-class AppLaunchWorker(
-    context: Context,
-    workerParams: WorkerParameters
+@HiltWorker
+class AppLaunchWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val repository: ScheduleRepository // Inject the repository
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
         val packageName = inputData.getString("packageName") ?: return Result.failure()
-        Log.d("AppLaunchWorker", "Attempting to launch app: $packageName")
+        Log.d("com.rafsan.schedular.utility.workUtility.AppLaunchWorker", "Attempting to launch app: $packageName")
 
         val packageManager = applicationContext.packageManager
         try {
             packageManager.getPackageInfo(packageName, 0)
         } catch (e: Exception) {
-            Log.e("AppLaunchWorker", "App not installed: $packageName")
+            Log.e("com.rafsan.schedular.utility.workUtility.AppLaunchWorker", "App not installed: $packageName")
             return Result.failure()
         }
 
@@ -36,22 +41,24 @@ class AppLaunchWorker(
             notifyUserToLaunchApp(packageName)
             try {
                 launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                Log.d("AppLaunchWorker", "Launching app: $packageName")
+                Log.d("com.rafsan.schedular.utility.workUtility.AppLaunchWorker", "Launching app: $packageName")
                 applicationContext.startActivity(launchIntent)
-            } catch (exception:Exception) {
-                Log.e("AppLaunchWorker", "${exception.message}")
+
+                // Update the Room database via the repository
+            } catch (exception: Exception) {
+                Log.e("com.rafsan.schedular.utility.workUtility.AppLaunchWorker", "${exception.message}")
+                return Result.failure()
             }
 
             return Result.success()
         } else {
-            Log.e("AppLaunchWorker", "Failed to get launch intent for app: $packageName")
+            Log.e("com.rafsan.schedular.utility.workUtility.AppLaunchWorker", "Failed to get launch intent for app: $packageName")
             notifyUserToLaunchApp(packageName)
             return Result.failure()
         }
     }
 
     private fun notifyUserToLaunchApp(packageName: String) {
-
         val notificationManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -73,7 +80,7 @@ class AppLaunchWorker(
         )
 
         val notification = NotificationCompat.Builder(applicationContext, "app_launch_channel")
-            .setContentTitle("Launch App 2+${System.currentTimeMillis()/1000}")
+            .setContentTitle("Launch App 2+${System.currentTimeMillis() / 1000}")
             .setContentText("Tap to launch $packageName")
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentIntent(pendingIntent)

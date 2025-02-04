@@ -10,5 +10,4 @@ data class ScheduleEntity(
     val scheduleTime: Long? = null,
     val completed: Boolean = false,
     val isScheduled: Boolean = false,
-    val appIcon: ByteArray? = null
 )

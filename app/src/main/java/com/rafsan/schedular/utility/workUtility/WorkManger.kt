@@ -1,13 +1,14 @@
 package com.rafsan.schedular.utility.workUtility
 
-import AppLaunchWorker
 import android.content.Context
+import android.util.Log
 import androidx.work.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class WorkManagerHelper(val context: Context) {
-
-    private val workManager = WorkManager.getInstance(context)
+class WorkManagerHelper  @Inject constructor(
+private val workManager: WorkManager
+) {
 
     fun scheduleAppLaunch(
         packageName: String,
@@ -15,13 +16,16 @@ class WorkManagerHelper(val context: Context) {
         onSuccess: () -> Unit,
         onFailure: () -> Unit
     ) {
+        Log.d("checkTime", "${System.currentTimeMillis()}, $delayInSeconds")
+        val duration = delayInSeconds - System.currentTimeMillis()
+
         val inputData = Data.Builder()
             .putString("packageName", packageName)
             .build()
 
         val workRequest = OneTimeWorkRequestBuilder<AppLaunchWorker>()
             .setInputData(inputData)
-            .setInitialDelay(delayInSeconds, TimeUnit.SECONDS)
+            .setInitialDelay(duration, TimeUnit.MILLISECONDS)
             .build()
 
         workManager.enqueue(workRequest)

@@ -15,6 +15,9 @@ interface ScheduleDao {
     @Delete
     suspend fun deleteScheduledApp(schedule: ScheduleEntity)
 
+    @Query("UPDATE schedules SET scheduleTime = null, completed = 0, isScheduled = 0 WHERE packageName = :packageName")
+    suspend fun resetScheduledApp(packageName: String)
+
     @Query("SELECT * FROM schedules")
     fun getAllApps(): Flow<List<ScheduleEntity>>
 
@@ -27,8 +30,7 @@ interface ScheduleDao {
     @Query("SELECT * FROM schedules WHERE packageName = :packageName LIMIT 1")
     suspend fun getScheduledInfo(packageName: String): ScheduleEntity?
 
-    @Query("UPDATE schedules SET isScheduled = 1 WHERE packageName = :packageName")
-    suspend fun scheduleApp(packageName: String)
-
+    @Query("UPDATE schedules SET isScheduled = 1, scheduleTime = :scheduleTime WHERE packageName = :packageName")
+    suspend fun scheduleApp(packageName: String, scheduleTime: Long)
 
 }

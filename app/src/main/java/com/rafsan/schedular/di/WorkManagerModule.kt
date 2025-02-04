@@ -14,11 +14,18 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 object WorkManagerModule {
 
     @Provides
-    fun provideWorkManagerHelper(@ApplicationContext context: Context): WorkManagerHelper {
-        return WorkManagerHelper(context)
+    @Singleton
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
+        return WorkManager.getInstance(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWorkManagerHelper(workManager: WorkManager): WorkManagerHelper {
+        return WorkManagerHelper(workManager)
     }
 }
