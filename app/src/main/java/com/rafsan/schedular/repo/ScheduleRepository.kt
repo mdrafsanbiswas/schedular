@@ -37,6 +37,10 @@ class ScheduleRepository @Inject constructor(
         database.scheduleDao().resetScheduledApp(packageName?:"")
     }
 
+    suspend fun narkAsCompleted(packageName: String) {
+
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun insertAllApps(data: List<AppInfo>) {
         val appEntities = data.map { app ->

@@ -12,9 +12,6 @@ interface ScheduleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllApps(apps: List<ScheduleEntity>)
 
-    @Delete
-    suspend fun deleteScheduledApp(schedule: ScheduleEntity)
-
     @Query("UPDATE schedules SET scheduleTime = null, completed = 0, isScheduled = 0 WHERE packageName = :packageName")
     suspend fun resetScheduledApp(packageName: String)
 

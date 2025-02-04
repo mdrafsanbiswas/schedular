@@ -19,18 +19,16 @@ import dagger.assisted.AssistedInject
 class AppLaunchWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val repository: ScheduleRepository // Inject the repository
+    private val repository: ScheduleRepository
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
         val packageName = inputData.getString("packageName") ?: return Result.failure()
-        Log.d("com.rafsan.schedular.utility.workUtility.AppLaunchWorker", "Attempting to launch app: $packageName")
 
         val packageManager = applicationContext.packageManager
         try {
             packageManager.getPackageInfo(packageName, 0)
         } catch (e: Exception) {
-            Log.e("com.rafsan.schedular.utility.workUtility.AppLaunchWorker", "App not installed: $packageName")
             return Result.failure()
         }
 
@@ -41,18 +39,14 @@ class AppLaunchWorker @AssistedInject constructor(
                 repository.resetSchedule(packageName)
 
                 launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                Log.d("com.rafsan.schedular.utility.workUtility.AppLaunchWorker", "Launching app: $packageName")
                 applicationContext.startActivity(launchIntent)
-
-                // Update the Room database via the repository
             } catch (exception: Exception) {
-                Log.e("com.rafsan.schedular.utility.workUtility.AppLaunchWorker", "${exception.message}")
+                Log.e("AppLaunchWorker", "${exception.message}")
                 return Result.failure()
             }
 
             return Result.success()
         } else {
-            Log.e("com.rafsan.schedular.utility.workUtility.AppLaunchWorker", "Failed to get launch intent for app: $packageName")
             notifyUserToLaunchApp(packageName)
             return Result.failure()
         }
@@ -80,7 +74,7 @@ class AppLaunchWorker @AssistedInject constructor(
         )
 
         val notification = NotificationCompat.Builder(applicationContext, "app_launch_channel")
-            .setContentTitle("Launch App 2+${System.currentTimeMillis() / 1000}")
+            .setContentTitle("Launch App")
             .setContentText("Tap to launch $packageName")
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentIntent(pendingIntent)

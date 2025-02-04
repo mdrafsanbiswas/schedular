@@ -3,7 +3,9 @@ package com.rafsan.schedular.ui.composables
 
 import android.app.TimePickerDialog
 import android.icu.text.SimpleDateFormat
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,10 +42,14 @@ import androidx.compose.ui.unit.dp
 import com.rafsan.schedular.R
 import com.rafsan.schedular.data.ScheduleEntity
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleBottomSheet(
@@ -57,10 +63,16 @@ fun ScheduleBottomSheet(
         val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         val scope = rememberCoroutineScope()
 
+        val currentTimeMillis = System.currentTimeMillis()
+
+        val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        val currentMinute = Calendar.getInstance().get(Calendar.MINUTE)
+
         var selectedDateTime by remember { mutableStateOf<Long?>(null) }
         var selectedDateMillis by remember { mutableStateOf<Long?>(null) }
-        var selectedHour by remember { mutableStateOf(0) }
-        var selectedMinute by remember { mutableStateOf(0) }
+
+        var selectedHour by remember { mutableStateOf(currentHour) }
+        var selectedMinute by remember { mutableStateOf(currentMinute) }
 
         var showDatePicker by remember { mutableStateOf(false) }
         var showTimePicker by remember { mutableStateOf(false) }
@@ -80,7 +92,7 @@ fun ScheduleBottomSheet(
 
                 if (schedule?.isScheduled == true) {
                     val formattedTime =
-                        SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.getDefault()).format(
+                        SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault()).format(
                             Date(schedule.scheduleTime ?: 0L)
                         )
                     Text("Scheduled at: $formattedTime")
@@ -148,14 +160,14 @@ fun ScheduleBottomSheet(
 
         if (showDatePicker) {
             DatePickerDialog(
-                onDismissRequest = { showDatePicker = false },
+                onDismissRequest = {},
                 confirmButton = {
                     TextButton(onClick = { showDatePicker = false; showTimePicker = true }) {
                         Text(stringResource(R.string.next))
                     }
                 }
             ) {
-                val datePickerState = rememberDatePickerState()
+                val datePickerState = rememberDatePickerState(initialSelectedDateMillis = currentTimeMillis)
                 DatePicker(state = datePickerState)
                 LaunchedEffect(datePickerState.selectedDateMillis) {
                     datePickerState.selectedDateMillis?.let { selectedMillis ->
@@ -167,7 +179,7 @@ fun ScheduleBottomSheet(
 
         if (showTimePicker) {
             AlertDialog(
-                onDismissRequest = { showTimePicker = false },
+                onDismissRequest = {  },
                 confirmButton = {
                     TextButton(onClick = {
                         showTimePicker = false
