@@ -32,9 +32,9 @@ class ScheduleRepository @Inject constructor(
         return database.scheduleDao().getScheduledInfo(packageName)?.isScheduled ?: false
     }
 
-    suspend fun deleteSchedule(schedule: ScheduleEntity?) {
-        workManagerHelper.cancelAllWorkByTag(schedule?.packageName?:"")
-        schedule?.let { database.scheduleDao().resetScheduledApp(schedule.packageName) }
+    suspend fun resetSchedule(packageName: String?) {
+        workManagerHelper.cancelAllWorkByTag(packageName?:"")
+        database.scheduleDao().resetScheduledApp(packageName?:"")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

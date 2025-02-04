@@ -2,16 +2,12 @@ package com.rafsan.schedular.ui
 
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rafsan.schedular.data.AppDatabase
 import com.rafsan.schedular.data.AppInfo
-import com.rafsan.schedular.data.Converters
 import com.rafsan.schedular.data.ScheduleEntity
 import com.rafsan.schedular.repo.ScheduleRepository
-import com.rafsan.schedular.utility.workUtility.WorkManagerHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -68,7 +64,7 @@ class ScheduleViewModel @Inject constructor(
 
     fun deleteSchedule(schedule: ScheduleEntity?) {
         viewModelScope.launch {
-            repository.deleteSchedule(schedule)
+            repository.resetSchedule(schedule?.packageName)
         }
     }
 

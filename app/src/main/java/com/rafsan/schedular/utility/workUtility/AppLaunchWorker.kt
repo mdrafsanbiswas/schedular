@@ -11,11 +11,9 @@ import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.rafsan.schedular.data.ScheduleEntity
 import com.rafsan.schedular.repo.ScheduleRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import javax.inject.Inject
 
 @HiltWorker
 class AppLaunchWorker @AssistedInject constructor(
@@ -40,6 +38,8 @@ class AppLaunchWorker @AssistedInject constructor(
         if (launchIntent != null) {
             notifyUserToLaunchApp(packageName)
             try {
+                repository.resetSchedule(packageName)
+
                 launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 Log.d("com.rafsan.schedular.utility.workUtility.AppLaunchWorker", "Launching app: $packageName")
                 applicationContext.startActivity(launchIntent)
