@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Schedular</string>
+    <string name="app_name">Scheduler</string>
     <string name="cancel_schedule">Cancel Schedule</string>
     <string name="okay">Okay</string>
     <string name="pick_date_time"><![CDATA[Pick Date & Time]]></string>
