@@ -33,6 +33,9 @@ class ScheduleViewModel @Inject constructor(
     private val _showAppListBottomSheet = MutableStateFlow(false)
     var showAppListBottomSheet = _showAppListBottomSheet.asStateFlow()
 
+    private val _showDeleteBottomSheet = MutableStateFlow(false)
+    var showDeleteBottomSheet = _showDeleteBottomSheet.asStateFlow()
+
     private val appIcons = MutableStateFlow<Map<String, Drawable>?>(null)
 
     fun showAppListBottomSheet() {
@@ -89,5 +92,13 @@ class ScheduleViewModel @Inject constructor(
             repository.insertAllApps(data)
             getAllApps()
         }
+    }
+
+    fun showDeleteBottomSheet() {
+        _showDeleteBottomSheet.value = true
+    }
+
+    fun hideDeleteBottomSheet() {
+        _showDeleteBottomSheet.value = false
     }
 }

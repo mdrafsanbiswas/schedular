@@ -1,4 +1,4 @@
-package com.rafsan.schedular.ui.composables
+package com.rafsan.schedular.ui.composables.components
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

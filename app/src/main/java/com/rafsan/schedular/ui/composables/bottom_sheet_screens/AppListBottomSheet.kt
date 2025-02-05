@@ -1,4 +1,4 @@
-package com.rafsan.schedular.ui.composables
+package com.rafsan.schedular.ui.composables.bottom_sheet_screens
 
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddAlarm
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -25,6 +23,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.rafsan.schedular.R
 import com.rafsan.schedular.data.ScheduleEntity
+import com.rafsan.schedular.ui.composables.components.CommonIcon
+import com.rafsan.schedular.ui.composables.components.CommonText
+import com.rafsan.schedular.ui.composables.InstalledApps
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

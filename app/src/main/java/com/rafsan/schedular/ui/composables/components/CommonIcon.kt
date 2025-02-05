@@ -1,4 +1,4 @@
-package com.rafsan.schedular.ui.composables
+package com.rafsan.schedular.ui.composables.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size

@@ -15,11 +15,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.rafsan.schedular.R
 import com.rafsan.schedular.data.AppInfo
 import com.rafsan.schedular.data.ScheduleEntity
-import com.rafsan.schedular.ui.composables.AppListBottomSheet
+import com.rafsan.schedular.ui.composables.bottom_sheet_screens.AppListBottomSheet
+import com.rafsan.schedular.ui.composables.bottom_sheet_screens.CommonDeleteBottomSheet
 import com.rafsan.schedular.ui.composables.DateAndTimePickerDialog
 import com.rafsan.schedular.ui.composables.HomeScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,7 +66,8 @@ class MainActivity : ComponentActivity() {
                        viewModel.showAppListBottomSheet()
                    },
                     onCancelClick = {
-                        viewModel.deleteSchedule(it)
+                        schedule = it
+                        viewModel.showDeleteBottomSheet()
                     },
                     appIconMap = viewModel.getAppIconMap().collectAsState().value
                 )
@@ -80,6 +84,19 @@ class MainActivity : ComponentActivity() {
                         viewModel.hideAppListBottomSheet()
                         viewModel.showScheduleBottomSheet()
                     }
+                )
+
+                CommonDeleteBottomSheet(
+                    state = viewModel.showDeleteBottomSheet.collectAsState().value,
+                    title = stringResource(R.string.are_you_sure),
+                    subTitle = "Launch of ${schedule?.appName} app will be cancelled",
+                    schedule = schedule,
+                    onDismiss = {
+                       viewModel.hideDeleteBottomSheet()
+                    }, onDelete = {
+                        viewModel.deleteSchedule(it)
+                    }, actionButtonText = getString(R.string.cancel_schedule)
+
                 )
 
                 /*ScheduleBottomSheet(
@@ -112,6 +129,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 )
+
             }
         }
     }

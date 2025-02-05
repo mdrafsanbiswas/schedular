@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.ManageHistory
 
 import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
@@ -24,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rafsan.schedular.R
 import com.rafsan.schedular.data.ScheduleEntity
+import com.rafsan.schedular.ui.composables.components.CommonIcon
+import com.rafsan.schedular.ui.composables.components.CommonText
 
 @Composable
 fun HomeScreen(

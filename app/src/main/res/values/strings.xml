@@ -13,4 +13,5 @@
     <string name="add_new_schedule">Add New Schedule</string>
     <string name="set_a_schedule_to_launch_your_app">Set a schedule to launch your app</string>
     <string name="no_schedules_are_set">No schedules are set</string>
+    <string name="are_you_sure">Are you sure?</string>
 </resources>
