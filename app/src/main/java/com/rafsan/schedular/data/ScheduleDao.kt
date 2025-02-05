@@ -12,7 +12,7 @@ interface ScheduleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllApps(apps: List<ScheduleEntity>)
 
-    @Query("UPDATE schedules SET scheduleTime = null, completed = 0, isScheduled = 0 WHERE packageName = :packageName")
+    @Query("UPDATE schedules SET scheduleTime = null, cancelled = 0, isScheduled = 0 WHERE packageName = :packageName")
     suspend fun resetScheduledApp(packageName: String)
 
     @Query("SELECT * FROM schedules")
@@ -21,8 +21,8 @@ interface ScheduleDao {
     @Query("SELECT * FROM schedules WHERE completed = 1")
     fun getAllCompletedSchedules(): Flow<List<ScheduleEntity>>
 
-    @Query("UPDATE schedules SET completed = 1 WHERE packageName = :packageName")
-    suspend fun markScheduleAsComplete(packageName :String)
+    @Query("UPDATE schedules SET completed = 1, completionTime =:timeInMillis WHERE packageName = :packageName")
+    suspend fun markScheduleAsComplete(packageName :String, timeInMillis: Long)
 
     @Query("SELECT * FROM schedules WHERE packageName = :packageName LIMIT 1")
     suspend fun getScheduledInfo(packageName: String): ScheduleEntity?

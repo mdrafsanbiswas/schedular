@@ -37,6 +37,7 @@ class AppLaunchWorker @AssistedInject constructor(
             notifyUserToLaunchApp(packageName)
             try {
                 repository.resetSchedule(packageName)
+                repository.markAsCompleted(packageName, System.currentTimeMillis())
 
                 launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 applicationContext.startActivity(launchIntent)

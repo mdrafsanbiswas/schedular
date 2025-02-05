@@ -37,8 +37,8 @@ class ScheduleRepository @Inject constructor(
         database.scheduleDao().resetScheduledApp(packageName?:"")
     }
 
-    suspend fun narkAsCompleted(packageName: String) {
-
+    suspend fun markAsCompleted(packageName: String, timeInMillis: Long) {
+        database.scheduleDao().markScheduleAsComplete(packageName,timeInMillis)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

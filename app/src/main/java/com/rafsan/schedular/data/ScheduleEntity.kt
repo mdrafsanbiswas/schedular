@@ -8,6 +8,10 @@ data class ScheduleEntity(
     @PrimaryKey val packageName: String,
     val appName: String = "",
     val scheduleTime: Long? = null,
+
+    val completionTime: Long? = null,
     val completed: Boolean = false,
+
+    val cancelled: Boolean = false,
     val isScheduled: Boolean = false,
 )

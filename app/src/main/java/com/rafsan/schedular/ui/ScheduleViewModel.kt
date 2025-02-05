@@ -30,7 +30,18 @@ class ScheduleViewModel @Inject constructor(
     private val _showScheduleBottomSheet = MutableStateFlow(false)
     var showScheduleBottomSheet = _showScheduleBottomSheet.asStateFlow()
 
+    private val _showAppListBottomSheet = MutableStateFlow(false)
+    var showAppListBottomSheet = _showAppListBottomSheet.asStateFlow()
+
     private val appIcons = MutableStateFlow<Map<String, Drawable>?>(null)
+
+    fun showAppListBottomSheet() {
+        _showAppListBottomSheet.value = true
+    }
+
+    fun hideAppListBottomSheet() {
+        _showAppListBottomSheet.value = false
+    }
 
     fun showScheduleBottomSheet() {
         _showScheduleBottomSheet.value = true
