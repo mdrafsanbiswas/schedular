@@ -21,7 +21,7 @@ fun CommonText(
     modifier: Modifier = Modifier,
     style: TextStyle = TextStyle.Default,
     overflow: TextOverflow = TextOverflow.Ellipsis,
-    maxLines: Int = 2
+    maxLines: Int = 1
 
 ) {
     Text(

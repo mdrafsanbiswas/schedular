@@ -1,12 +1,13 @@
 package com.rafsan.schedular.ui.composables
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
+
 import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -20,56 +21,59 @@ import androidx.compose.ui.unit.sp
 import com.rafsan.schedular.R
 import com.rafsan.schedular.data.ScheduleEntity
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     apps: List<ScheduleEntity>,
     onCancelClick: (ScheduleEntity) -> Unit,
-    onAddClick: ()-> Unit = {}
+    onAddClick: () -> Unit = {},
+    appIconMap: Map<String, Drawable>?
 ) {
     Scaffold(bottomBar = {
-        CommonButton(text = stringResource(R.string.add_new_schedule), onClick = onAddClick, textSize = 15.sp)
-    }) {
-        Column (modifier = Modifier
+        CommonButton(text = stringResource(R.string.add_new_schedule), onClick = onAddClick, textSize = 15.sp, modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = 16.dp))
+    }, containerColor = MaterialTheme.colorScheme.background) {
+        Column(modifier = Modifier
             .fillMaxSize()
-            .padding(start = 25.dp, end = 25.dp, top = 25.dp)
             .padding(it)) {
 
             if (apps.isEmpty()) {
                 EmptyScheduleUI()
             } else {
-                ScheduledAppList(
-                    apps = apps,
-                    onCancelClick = onCancelClick
-                )
+                    ScheduledAppList(
+                        apps = apps,
+                        onCancelClick = onCancelClick,
+                        appIconMap = appIconMap
+                    )
+
             }
         }
     }
 }
 
 @Composable
-fun CommonButton(text: String, onClick: () -> Unit, textSize: TextUnit, height: Dp = 48.dp) {
+fun CommonButton(text: String, onClick: () -> Unit, textSize: TextUnit, height: Dp = 48.dp, paddingValue: Dp = 16.dp, modifier: Modifier = Modifier) {
     Button(
         onClick = onClick,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+            .then(modifier)
+            .padding(paddingValue)
             .height(height)
     ) {
-        CommonText(text = text, fontWeight = FontWeight.Medium, size = textSize, color = MaterialTheme.typography.labelMedium.color)
+        CommonText(text = text, fontWeight = FontWeight.Medium, size = textSize, color = MaterialTheme.colorScheme.tertiary)
     }
 }
 
 @Composable
 fun EmptyScheduleUI() {
-
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(painter = painterResource(R.drawable.ic_schedule), contentDescription = null, Modifier.size(222.dp))
-        Spacer(modifier = Modifier.height(25.dp))
-        CommonText(text = stringResource(R.string.no_schedules_are_set), fontWeight = FontWeight.Bold, size = 25.sp)
-        Spacer(modifier = Modifier.height(10.dp))
-        CommonText(text = stringResource(R.string.set_a_schedule_to_launch_your_app), modifier = Modifier.weight(1f), fontWeight = FontWeight.Medium, size = 20.sp, color = Color.Gray)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center, modifier = Modifier.align(Alignment.Center).wrapContentHeight().background(Color.Red)) {
+            Image(painter = painterResource(R.drawable.ic_schedule), contentDescription = null, Modifier.size(222.dp))
+            Spacer(modifier = Modifier.height(25.dp))
+            CommonText(text = stringResource(R.string.no_schedules_are_set), fontWeight = FontWeight.Bold, size = 25.sp)
+            Spacer(modifier = Modifier.height(10.dp))
+            CommonText(text = stringResource(R.string.set_a_schedule_to_launch_your_app), modifier = Modifier.weight(1f), fontWeight = FontWeight.Medium, size = 20.sp, color = Color.Gray)
+        }
     }
+
 }
 
 

@@ -9,7 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import com.rafsan.schedular.ui.theme.SchedularTheme
+import com.rafsan.schedular.ui.theme.SchedulerTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
             val data = viewModel.allApps.collectAsState().value
             var schedule: ScheduleEntity? by remember { mutableStateOf(null) }
 
-            SchedularTheme {
+            SchedulerTheme {
 
                 HomeScreen(
                     apps = data.filter { it.isScheduled },
@@ -64,7 +64,8 @@ class MainActivity : ComponentActivity() {
                    },
                     onCancelClick = {
                         viewModel.deleteSchedule(it)
-                    }
+                    },
+                    appIconMap = viewModel.getAppIconMap().collectAsState().value
                 )
 
                 AppListBottomSheet(

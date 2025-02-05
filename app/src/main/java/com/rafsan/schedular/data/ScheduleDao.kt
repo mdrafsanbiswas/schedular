@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ScheduleDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAllApps(apps: List<ScheduleEntity>)
 
     @Query("UPDATE schedules SET scheduleTime = null, cancelled = 0, isScheduled = 0 WHERE packageName = :packageName")
