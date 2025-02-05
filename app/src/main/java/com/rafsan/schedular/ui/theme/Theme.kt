@@ -12,6 +12,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource.Companion.SideEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -20,7 +21,7 @@ import androidx.core.view.WindowCompat
 private val DarkColorScheme = darkColorScheme(
     primary = Color.White,
     secondary = colorTextDark,
-    tertiary = colorTextLight,
+    tertiary = colorTextLight, // button text color
     surface = colorSurfaceDark,
     background = colorBackGroundDark
 )
@@ -28,7 +29,7 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = Color.Black,
     secondary = colorTextLight,
-    tertiary = colorTextDark,
+    tertiary = colorTextDark, // button text color
     surface = colorSurfaceLight,
     background = colorBackGroundLight
 
@@ -52,10 +53,25 @@ fun SchedulerTheme(
 
     Log.d("check_theme", "$darkTheme")
 
+    val view = LocalView.current
+    val context = LocalContext.current
+
+
     val colors =  if (darkTheme) {
         DarkColorScheme
     } else {
         LightColorScheme
+    }
+
+    if (!view.isInEditMode) {
+        val window = (context as? Activity)?.window
+        window?.statusBarColor = colors.primary.toArgb()
+        val decorView = window?.decorView
+        val isLightTheme = !darkTheme
+        if (decorView != null) {
+            WindowCompat.getInsetsController(window, decorView).isAppearanceLightStatusBars =
+                isLightTheme
+        }
     }
 
     MaterialTheme(

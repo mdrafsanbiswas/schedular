@@ -18,7 +18,7 @@ fun ScheduledAppList(
     onCancelClick: (ScheduleEntity) -> Unit,
     appIconMap: Map<String, Drawable>?
 ) {
-    LazyColumn(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(20.dp)) {
         items(apps) {
             appIconMap?.get(it.packageName)?.let { icon ->
                 ScheduledAppListItem(
