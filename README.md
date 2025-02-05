@@ -55,7 +55,7 @@ Here are some previews of the app:
 <img src="https://github.com/user-attachments/assets/a29abd28-a362-4fbc-afbd-77225040f98f" width="250">
 
 <img src="https://github.com/user-attachments/assets/9b30ca0c-9696-4b91-a421-2d431239e86e" width="250">
-<img src="https://github.com/user-attachments/assets/794645c4-1bb0-4af0-a776-4a1d0be95816" width="250">
+
 
 </div>
 
