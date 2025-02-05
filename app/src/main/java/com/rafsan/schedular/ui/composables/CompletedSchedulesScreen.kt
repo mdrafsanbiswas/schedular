@@ -28,7 +28,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,7 +36,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.rafsan.schedular.R
 import com.rafsan.schedular.data.ScheduleEntity
 import com.rafsan.schedular.ui.ScheduleViewModel
-import com.rafsan.schedular.ui.composables.components.CommonButton
 import com.rafsan.schedular.ui.composables.components.CommonIcon
 import com.rafsan.schedular.ui.composables.components.CommonText
 

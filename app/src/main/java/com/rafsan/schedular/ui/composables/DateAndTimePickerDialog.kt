@@ -44,7 +44,7 @@ fun DateAndTimePickerDialog(state: Boolean, onDismiss: () -> Unit, onSetSchedule
     var showTimePicker by remember { mutableStateOf(false) }
 
     LaunchedEffect(state) {
-         showDatePicker = state
+        showDatePicker = state
     }
 
     if (showDatePicker) {
@@ -56,7 +56,8 @@ fun DateAndTimePickerDialog(state: Boolean, onDismiss: () -> Unit, onSetSchedule
                 }
             }
         ) {
-            val datePickerState = rememberDatePickerState(initialSelectedDateMillis = currentTimeMillis)
+            val datePickerState =
+                rememberDatePickerState(initialSelectedDateMillis = currentTimeMillis)
             DatePicker(state = datePickerState)
             LaunchedEffect(datePickerState.selectedDateMillis) {
                 datePickerState.selectedDateMillis?.let { selectedMillis ->
@@ -68,7 +69,7 @@ fun DateAndTimePickerDialog(state: Boolean, onDismiss: () -> Unit, onSetSchedule
 
     if (showTimePicker) {
         AlertDialog(
-            onDismissRequest = {  },
+            onDismissRequest = { },
             confirmButton = {
                 TextButton(onClick = {
                     showTimePicker = false
@@ -91,7 +92,10 @@ fun DateAndTimePickerDialog(state: Boolean, onDismiss: () -> Unit, onSetSchedule
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(stringResource(R.string.selected_time), style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        stringResource(R.string.selected_time),
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                     val timePickerState = rememberTimePickerState(
                         initialHour = selectedHour,

@@ -1,4 +1,5 @@
 package com.rafsan.schedular.ui.composables
+
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -26,7 +27,11 @@ import com.rafsan.schedular.ui.composables.components.CommonIcon
 import com.rafsan.schedular.ui.composables.components.CommonText
 
 @Composable
-fun InstalledApps(apps: List<ScheduleEntity>, onAppClick: (ScheduleEntity) -> Unit = {}, appIconMap: Map<String, Drawable>?) {
+fun InstalledApps(
+    apps: List<ScheduleEntity>,
+    onAppClick: (ScheduleEntity) -> Unit = {},
+    appIconMap: Map<String, Drawable>?
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -59,9 +64,14 @@ fun AppListItem(
             modifier = Modifier.size(30.dp)
         )
         Spacer(modifier = Modifier.width(16.dp))
-        CommonText(text = app.appName, fontWeight = FontWeight.Medium, size = 14.sp, modifier = Modifier.weight(1f))
+        CommonText(
+            text = app.appName,
+            fontWeight = FontWeight.Medium,
+            size = 14.sp,
+            modifier = Modifier.weight(1f)
+        )
 
-        if(app.isScheduled) {
+        if (app.isScheduled) {
             CommonIcon(imageVector = Icons.Filled.AccessTime, size = 20.dp)
         }
     }

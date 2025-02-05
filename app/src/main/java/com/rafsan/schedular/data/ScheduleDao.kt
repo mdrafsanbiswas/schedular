@@ -1,7 +1,6 @@
 package com.rafsan.schedular.data
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -22,10 +21,10 @@ interface ScheduleDao {
     fun getAllCompletedSchedules(): Flow<List<ScheduleEntity>>
 
     @Query("UPDATE schedules SET completed = 1, completionTime =:timeInMillis WHERE packageName = :packageName")
-    suspend fun markScheduleAsComplete(packageName :String, timeInMillis: Long)
+    suspend fun markScheduleAsComplete(packageName: String, timeInMillis: Long)
 
     @Query("UPDATE schedules SET completed = 0, completionTime = null WHERE packageName = :packageName")
-    suspend fun resetCompletedRecord(packageName :String)
+    suspend fun resetCompletedRecord(packageName: String)
 
     @Query("SELECT * FROM schedules WHERE packageName = :packageName LIMIT 1")
     suspend fun getScheduledInfo(packageName: String): ScheduleEntity?

@@ -1,17 +1,21 @@
 package com.rafsan.schedular.utility.workUtility
 
-import android.content.Context
 import android.util.Log
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import com.google.gson.Gson
+import com.rafsan.schedular.data.ScheduleEntity
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class WorkManagerHelper  @Inject constructor(
-private val workManager: WorkManager
+class WorkManagerHelper @Inject constructor(
+    private val workManager: WorkManager
 ) {
 
     fun scheduleAppLaunch(
-        packageName: String,
+        data: ScheduleEntity,
         delayInSeconds: Long,
         onSuccess: () -> Unit,
         onFailure: () -> Unit
@@ -20,7 +24,7 @@ private val workManager: WorkManager
         val duration = delayInSeconds - System.currentTimeMillis()
 
         val inputData = Data.Builder()
-            .putString("packageName", packageName)
+            .putString("package", Gson().toJson(data))
             .build()
 
         val workRequest = OneTimeWorkRequestBuilder<AppLaunchWorker>()

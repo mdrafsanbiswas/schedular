@@ -9,8 +9,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 
 @Composable
-fun CommonIcon(imageVector: ImageVector,size: Dp, onClick: ()-> Unit = {}) {
-    Icon(imageVector = imageVector, contentDescription = null, modifier = Modifier.size(size).clickable {
-        onClick()
-    })
+fun CommonIcon(imageVector: ImageVector, size: Dp, onClick: () -> Unit = {}) {
+    Icon(
+        imageVector = imageVector,
+        contentDescription = null,
+        modifier = Modifier
+            .size(size)
+            .clickable {
+                onClick()
+            })
 }

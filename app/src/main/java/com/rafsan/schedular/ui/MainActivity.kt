@@ -9,9 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import com.rafsan.schedular.ui.theme.SchedulerTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,24 +26,29 @@ import com.rafsan.schedular.R
 import com.rafsan.schedular.data.AppInfo
 import com.rafsan.schedular.data.ScheduleEntity
 import com.rafsan.schedular.ui.composables.CompletedSchedulesScreen
-import com.rafsan.schedular.ui.composables.bottom_sheet_screens.AppListBottomSheet
-import com.rafsan.schedular.ui.composables.bottom_sheet_screens.CommonDeleteBottomSheet
 import com.rafsan.schedular.ui.composables.DateAndTimePickerDialog
 import com.rafsan.schedular.ui.composables.HomeScreen
+import com.rafsan.schedular.ui.composables.bottom_sheet_screens.AppListBottomSheet
+import com.rafsan.schedular.ui.composables.bottom_sheet_screens.CommonDeleteBottomSheet
+import com.rafsan.schedular.ui.theme.SchedulerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel : ScheduleViewModel by viewModels()
+    private val viewModel: ScheduleViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.POST_NOTIFICATIONS
+                )
+                != PackageManager.PERMISSION_GRANTED
+            ) {
 
                 ActivityCompat.requestPermissions(
                     this,
@@ -96,7 +98,9 @@ fun AppNavigation(viewModel: ScheduleViewModel) {
 
         composable("completedSchedules") {
             CompletedSchedulesScreen(
-                onBackClick = { navController.popBackStack() }, viewModel = viewModel, onDeleteRecord = {
+                onBackClick = { navController.popBackStack() },
+                viewModel = viewModel,
+                onDeleteRecord = {
                     viewModel.deleteRecord(it)
                 }
             )
@@ -105,7 +109,7 @@ fun AppNavigation(viewModel: ScheduleViewModel) {
 }
 
 @Composable
-fun Dashboard(navController: NavController,viewModel: ScheduleViewModel) {
+fun Dashboard(navController: NavController, viewModel: ScheduleViewModel) {
 
     val data = viewModel.allApps.collectAsState().value
     var schedule: ScheduleEntity? by remember { mutableStateOf(null) }
@@ -159,7 +163,7 @@ fun Dashboard(navController: NavController,viewModel: ScheduleViewModel) {
         },
         onSetSchedule = {
             viewModel.scheduleAppLaunch(
-                schedule?.packageName?:"",
+                schedule,
                 it
             )
         }

@@ -30,7 +30,15 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommonDeleteBottomSheet(state: Boolean, title: String,subTitle: String, schedule: ScheduleEntity?, onDelete: (ScheduleEntity) -> Unit, onDismiss:() -> Unit, actionButtonText: String) {
+fun CommonDeleteBottomSheet(
+    state: Boolean,
+    title: String,
+    subTitle: String,
+    schedule: ScheduleEntity?,
+    onDelete: (ScheduleEntity) -> Unit,
+    onDismiss: () -> Unit,
+    actionButtonText: String
+) {
     if (state) {
         val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         val scope = rememberCoroutineScope()
@@ -48,7 +56,11 @@ fun CommonDeleteBottomSheet(state: Boolean, title: String,subTitle: String, sche
 
                 CommonText(title, size = 25.sp)
                 Spacer(modifier = Modifier.height(20.dp))
-                CommonText(text = subTitle, size = 16.sp, color = MaterialTheme.colorScheme.secondary.copy(alpha = .5f))
+                CommonText(
+                    text = subTitle,
+                    size = 16.sp,
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = .5f)
+                )
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -69,9 +81,11 @@ fun CommonDeleteBottomSheet(state: Boolean, title: String,subTitle: String, sche
                             scope.launch { bottomSheetState.hide() }
                         },
                     ) {
-                        Text(actionButtonText, style = TextStyle(
-                            fontFamily = fonts
-                        ))
+                        Text(
+                            actionButtonText, style = TextStyle(
+                                fontFamily = fonts
+                            )
+                        )
                     }
                 }
             }

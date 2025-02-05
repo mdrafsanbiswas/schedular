@@ -70,9 +70,9 @@ class ScheduleViewModel @Inject constructor(
         return appIcons
     }
 
-    fun scheduleAppLaunch(packageName: String, delayInSeconds: Long) {
+    fun scheduleAppLaunch(data: ScheduleEntity?, delayInSeconds: Long) {
         viewModelScope.launch {
-            repository.scheduleAppLaunch(packageName, delayInSeconds)
+            data?.let { repository.scheduleAppLaunch(it, delayInSeconds) }
         }
     }
 

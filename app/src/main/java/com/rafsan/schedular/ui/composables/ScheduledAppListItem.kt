@@ -7,7 +7,14 @@ import android.os.Looper
 import android.text.format.DateUtils
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -42,11 +49,15 @@ fun ScheduledAppListItem(
     data: ScheduleEntity
 ) {
     val context = LocalContext.current
-    val scheduleTime = data.scheduleTime?:0L
+    val scheduleTime = data.scheduleTime ?: 0L
     val handler = remember { Handler(Looper.getMainLooper()) }
-    var relativeTime by remember { mutableStateOf(getReadableRemainingTime(
-        scheduleTime - System.currentTimeMillis())
-    ) }
+    var relativeTime by remember {
+        mutableStateOf(
+            getReadableRemainingTime(
+                scheduleTime - System.currentTimeMillis()
+            )
+        )
+    }
 
     DisposableEffect(data.scheduleTime) {
         val timer = Timer()
@@ -54,7 +65,8 @@ fun ScheduledAppListItem(
             override fun run() {
                 handler.post {
                     relativeTime = getReadableRemainingTime(
-                        scheduleTime - System.currentTimeMillis())
+                        scheduleTime - System.currentTimeMillis()
+                    )
                 }
             }
         }
@@ -62,9 +74,17 @@ fun ScheduledAppListItem(
         onDispose { timer.cancel() }
     }
 
-    val formattedTime = remember { getFormattedTime(data.scheduleTime?:0L) }
+    val formattedTime = remember { getFormattedTime(data.scheduleTime ?: 0L) }
 
-    Row(modifier = Modifier.fillMaxWidth().background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp)).padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(16.dp), verticalAlignment = Alignment.CenterVertically
+    ) {
         Image(
             painter = rememberAsyncImagePainter(icon),
             contentDescription = "App Icon",
@@ -75,13 +95,22 @@ fun ScheduledAppListItem(
         Spacer(modifier = Modifier.width(16.dp))
 
         Column(modifier = Modifier.weight(1f)) {
-            CommonText(text = "In $relativeTime", size = 16.sp, color = MaterialTheme.colorScheme.secondary.copy(alpha = .5f))
+            CommonText(
+                text = "In $relativeTime",
+                size = 16.sp,
+                color = MaterialTheme.colorScheme.secondary.copy(alpha = .5f)
+            )
             Spacer(modifier = Modifier.height(15.dp))
 
             CommonText(text = data.appName)
             Spacer(modifier = Modifier.height(6.dp))
 
-            CommonText(text = "\uD83D\uDDD3 $formattedTime", size = 14.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.secondary.copy(alpha = .8f))
+            CommonText(
+                text = "\uD83D\uDDD3 $formattedTime",
+                size = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.secondary.copy(alpha = .8f)
+            )
 
         }
 
@@ -91,42 +120,41 @@ fun ScheduledAppListItem(
     }
 
 
+    /* Row(
+         modifier = modifier
+             .fillMaxWidth()
+             .background(color = Color.LightGray, shape = RoundedCornerShape(16.dp)).padding(16.dp),
+         verticalAlignment = Alignment.CenterVertically
+     ) {
+         Image(
+             painter = icon,
+             contentDescription = "App Icon",
+             modifier = Modifier
+                 .size(48.dp)
+                 .clip(RoundedCornerShape(8.dp))
+         )
 
-   /* Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(color = Color.LightGray, shape = RoundedCornerShape(16.dp)).padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = icon,
-            contentDescription = "App Icon",
-            modifier = Modifier
-                .size(48.dp)
-                .clip(RoundedCornerShape(8.dp))
-        )
+         Spacer(modifier = Modifier.width(12.dp))
 
-        Spacer(modifier = Modifier.width(12.dp))
+         Column(
+             modifier = Modifier.weight(1f)
+         ) {
+             CommonText(text = appName, color = MaterialTheme.typography.labelMedium.color, size = 20.sp, fontWeight = FontWeight.Medium)
+             Spacer(modifier = Modifier.height(5.dp))
+             CommonText(text = packageName, color = MaterialTheme.typography.labelMedium.color, size = MaterialTheme.typography.bodySmall.fontSize, fontWeight = FontWeight.Normal)
+         }
 
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            CommonText(text = appName, color = MaterialTheme.typography.labelMedium.color, size = 20.sp, fontWeight = FontWeight.Medium)
-            Spacer(modifier = Modifier.height(5.dp))
-            CommonText(text = packageName, color = MaterialTheme.typography.labelMedium.color, size = MaterialTheme.typography.bodySmall.fontSize, fontWeight = FontWeight.Normal)
-        }
-
-        Column(
-            horizontalAlignment = Alignment.End
-        ) {
-            Text(text = "⏳ $relativeTime", style = MaterialTheme.typography.bodyMedium)
-            Text(
-                text = "📅 $formattedTime",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }*/
+         Column(
+             horizontalAlignment = Alignment.End
+         ) {
+             Text(text = "⏳ $relativeTime", style = MaterialTheme.typography.bodyMedium)
+             Text(
+                 text = "📅 $formattedTime",
+                 style = MaterialTheme.typography.bodySmall,
+                 color = MaterialTheme.colorScheme.onSurfaceVariant
+             )
+         }
+     }*/
 }
 
 fun getReadableRemainingTime(millis: Long): String {

@@ -161,7 +161,8 @@ fun ScheduleBottomSheet(
                     }
                 }
             ) {
-                val datePickerState = rememberDatePickerState(initialSelectedDateMillis = currentTimeMillis)
+                val datePickerState =
+                    rememberDatePickerState(initialSelectedDateMillis = currentTimeMillis)
                 DatePicker(state = datePickerState)
                 LaunchedEffect(datePickerState.selectedDateMillis) {
                     datePickerState.selectedDateMillis?.let { selectedMillis ->
@@ -173,7 +174,7 @@ fun ScheduleBottomSheet(
 
         if (showTimePicker) {
             AlertDialog(
-                onDismissRequest = {  },
+                onDismissRequest = { },
                 confirmButton = {
                     TextButton(onClick = {
                         showTimePicker = false
@@ -194,7 +195,10 @@ fun ScheduleBottomSheet(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(stringResource(R.string.selected_time), style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            stringResource(R.string.selected_time),
+                            style = MaterialTheme.typography.titleMedium
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         val timePickerState = rememberTimePickerState(
                             initialHour = selectedHour,

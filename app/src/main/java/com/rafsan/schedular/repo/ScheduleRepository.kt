@@ -19,12 +19,12 @@ class ScheduleRepository @Inject constructor(
         return database.scheduleDao().getAllApps()
     }
 
-    suspend fun scheduleAppLaunch(packageName: String, delayInMillis: Long) {
-        if (!isAlreadyScheduled(packageName)) {
-            database.scheduleDao().scheduleApp(packageName, delayInMillis)
-            workManagerHelper.scheduleAppLaunch(packageName, delayInMillis, {}, {})
+    suspend fun scheduleAppLaunch(data: ScheduleEntity, delayInMillis: Long) {
+        if (!isAlreadyScheduled(data.packageName)) {
+            database.scheduleDao().scheduleApp(data.packageName, delayInMillis)
+            workManagerHelper.scheduleAppLaunch(data, delayInMillis, {}, {})
         } else {
-            Log.d("ScheduleRepository", "Package $packageName is already scheduled.")
+            Log.d("ScheduleRepository", "Package ${data.packageName} is already scheduled.")
         }
     }
 
@@ -33,12 +33,12 @@ class ScheduleRepository @Inject constructor(
     }
 
     suspend fun resetSchedule(packageName: String?) {
-        workManagerHelper.cancelAllWorkByTag(packageName?:"")
-        database.scheduleDao().resetScheduledApp(packageName?:"")
+        workManagerHelper.cancelAllWorkByTag(packageName ?: "")
+        database.scheduleDao().resetScheduledApp(packageName ?: "")
     }
 
     suspend fun markAsCompleted(packageName: String, timeInMillis: Long) {
-        database.scheduleDao().markScheduleAsComplete(packageName,timeInMillis)
+        database.scheduleDao().markScheduleAsComplete(packageName, timeInMillis)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -53,6 +53,6 @@ class ScheduleRepository @Inject constructor(
     }
 
     suspend fun deleteRecord(record: ScheduleEntity) {
-      database.scheduleDao().resetCompletedRecord(record.packageName)
+        database.scheduleDao().resetCompletedRecord(record.packageName)
     }
 }

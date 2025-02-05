@@ -39,22 +39,29 @@ fun AppListBottomSheet(
 ) {
     if (state) {
         val bottomSheetState =
-            rememberModalBottomSheetState(skipPartiallyExpanded = false, confirmValueChange = { newState ->
-                newState != SheetValue.Hidden
-            })
+            rememberModalBottomSheetState(
+                skipPartiallyExpanded = false,
+                confirmValueChange = { newState ->
+                    newState != SheetValue.Hidden
+                })
         val scope = rememberCoroutineScope()
 
         val screenHeight = LocalConfiguration.current.screenHeightDp.dp
         val maxSheetHeight = screenHeight * 0.6f
 
         ModalBottomSheet(
-            onDismissRequest = {  },
+            onDismissRequest = { },
             sheetState = bottomSheetState
         ) {
-            Column(modifier = Modifier
-                .padding(start = 25.dp, end = 25.dp)
-                .heightIn(max = maxSheetHeight)) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Column(
+                modifier = Modifier
+                    .padding(start = 25.dp, end = 25.dp)
+                    .heightIn(max = maxSheetHeight)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     CommonText(stringResource(R.string.select_app))
 
                     CommonIcon(imageVector = Icons.Filled.Close, size = 20.dp, onClick = {
@@ -66,7 +73,7 @@ fun AppListBottomSheet(
                 }
                 Spacer(modifier = Modifier.height(30.dp))
 
-                InstalledApps(apps,appIconMap = appIconMap, onAppClick = onAppClick)
+                InstalledApps(apps, appIconMap = appIconMap, onAppClick = onAppClick)
             }
 
         }

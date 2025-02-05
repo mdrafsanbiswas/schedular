@@ -33,7 +33,7 @@ fun HomeScreen(
     apps: List<ScheduleEntity>,
     onCancelClick: (ScheduleEntity) -> Unit,
     onAddClick: () -> Unit = {},
-    onHistoryClick: ()-> Unit = {},
+    onHistoryClick: () -> Unit = {},
     appIconMap: Map<String, Drawable>?
 ) {
     Scaffold(bottomBar = {
@@ -53,13 +53,27 @@ fun HomeScreen(
                 .padding(16.dp)
         ) {
 
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp), verticalAlignment = Alignment.CenterVertically) {
-                Image(painter = painterResource(R.drawable.ic_schedule), modifier = Modifier.size(30.dp), contentDescription = null)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp), verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_schedule),
+                    modifier = Modifier.size(30.dp),
+                    contentDescription = null
+                )
                 Spacer(modifier = Modifier.width(15.dp))
-                CommonText(stringResource(R.string.your_schedules), size = 25.sp, modifier = Modifier.weight(1f))
-                CommonIcon(imageVector = Icons.Filled.History, size = 30.dp, onClick = onHistoryClick)
+                CommonText(
+                    stringResource(R.string.your_schedules),
+                    size = 25.sp,
+                    modifier = Modifier.weight(1f)
+                )
+                CommonIcon(
+                    imageVector = Icons.Filled.History,
+                    size = 30.dp,
+                    onClick = onHistoryClick
+                )
             }
 
             if (apps.isEmpty()) {

@@ -11,6 +11,8 @@ import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.google.gson.Gson
+import com.rafsan.schedular.data.ScheduleEntity
 import com.rafsan.schedular.repo.ScheduleRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -23,7 +25,10 @@ class AppLaunchWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        val packageName = inputData.getString("packageName") ?: return Result.failure()
+
+        val data = Gson().fromJson(inputData.getString("package"), ScheduleEntity::class.java)
+
+        val packageName = data.packageName
 
         val packageManager = applicationContext.packageManager
         try {
@@ -34,7 +39,7 @@ class AppLaunchWorker @AssistedInject constructor(
 
         val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
         if (launchIntent != null) {
-            notifyUserToLaunchApp(packageName)
+            notifyUserToLaunchApp(data)
             try {
                 repository.resetSchedule(packageName)
                 repository.markAsCompleted(packageName, System.currentTimeMillis())
@@ -48,12 +53,12 @@ class AppLaunchWorker @AssistedInject constructor(
 
             return Result.success()
         } else {
-            notifyUserToLaunchApp(packageName)
+            notifyUserToLaunchApp(data)
             return Result.failure()
         }
     }
 
-    private fun notifyUserToLaunchApp(packageName: String) {
+    private fun notifyUserToLaunchApp(data: ScheduleEntity) {
         val notificationManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -66,7 +71,7 @@ class AppLaunchWorker @AssistedInject constructor(
             notificationManager.createNotificationChannel(channel)
         }
 
-        val launchIntent = applicationContext.packageManager.getLaunchIntentForPackage(packageName)
+        val launchIntent = applicationContext.packageManager.getLaunchIntentForPackage(data.packageName)
         val pendingIntent = PendingIntent.getActivity(
             applicationContext,
             0,
@@ -76,7 +81,7 @@ class AppLaunchWorker @AssistedInject constructor(
 
         val notification = NotificationCompat.Builder(applicationContext, "app_launch_channel")
             .setContentTitle("Launch App")
-            .setContentText("Tap to launch $packageName")
+            .setContentText("Tap to launch ${data.appName}")
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentIntent(pendingIntent)
             .build()
