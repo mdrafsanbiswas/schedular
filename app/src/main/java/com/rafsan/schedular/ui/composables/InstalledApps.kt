@@ -40,7 +40,7 @@ fun InstalledApps(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .clickable { onAppClick(app) },
+                    .clickable { if (!app.isScheduled) onAppClick(app) },
             ) {
 
                 AppListItem(
