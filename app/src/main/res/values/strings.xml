@@ -14,4 +14,8 @@
     <string name="set_a_schedule_to_launch_your_app">Set a schedule to launch your app</string>
     <string name="no_schedules_are_set">No schedules are set</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="your_schedules">Your schedules</string>
+    <string name="completed_schedules">Completed Schedules</string>
+    <string name="no_completed_schedules_yet">No completed schedules yet</string>
+    <string name="completed_schedules_will_be_here">Completed schedules will be here</string>
 </resources>

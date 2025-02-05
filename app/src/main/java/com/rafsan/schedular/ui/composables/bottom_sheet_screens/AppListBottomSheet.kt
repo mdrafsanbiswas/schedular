@@ -23,9 +23,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.rafsan.schedular.R
 import com.rafsan.schedular.data.ScheduleEntity
+import com.rafsan.schedular.ui.composables.InstalledApps
 import com.rafsan.schedular.ui.composables.components.CommonIcon
 import com.rafsan.schedular.ui.composables.components.CommonText
-import com.rafsan.schedular.ui.composables.InstalledApps
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

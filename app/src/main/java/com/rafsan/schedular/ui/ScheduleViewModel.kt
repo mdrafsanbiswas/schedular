@@ -101,4 +101,10 @@ class ScheduleViewModel @Inject constructor(
     fun hideDeleteBottomSheet() {
         _showDeleteBottomSheet.value = false
     }
+
+    fun deleteRecord(record: ScheduleEntity) {
+        viewModelScope.launch {
+            repository.deleteRecord(record)
+        }
+    }
 }

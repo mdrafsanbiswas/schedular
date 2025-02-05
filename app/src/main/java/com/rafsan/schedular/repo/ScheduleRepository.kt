@@ -51,4 +51,8 @@ class ScheduleRepository @Inject constructor(
         }
         database.scheduleDao().insertAllApps(appEntities)
     }
+
+    suspend fun deleteRecord(record: ScheduleEntity) {
+      database.scheduleDao().resetCompletedRecord(record.packageName)
+    }
 }

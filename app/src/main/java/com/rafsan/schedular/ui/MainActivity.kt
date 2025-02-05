@@ -9,6 +9,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
 import com.rafsan.schedular.ui.theme.SchedulerTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -18,9 +20,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.rafsan.schedular.R
 import com.rafsan.schedular.data.AppInfo
 import com.rafsan.schedular.data.ScheduleEntity
+import com.rafsan.schedular.ui.composables.CompletedSchedulesScreen
 import com.rafsan.schedular.ui.composables.bottom_sheet_screens.AppListBottomSheet
 import com.rafsan.schedular.ui.composables.bottom_sheet_screens.CommonDeleteBottomSheet
 import com.rafsan.schedular.ui.composables.DateAndTimePickerDialog
@@ -54,82 +62,8 @@ class MainActivity : ComponentActivity() {
         viewModel.mapAppIcons(data = apps)
 
         setContent {
-
-            val data = viewModel.allApps.collectAsState().value
-            var schedule: ScheduleEntity? by remember { mutableStateOf(null) }
-
             SchedulerTheme {
-
-                HomeScreen(
-                    apps = data.filter { it.isScheduled },
-                    onAddClick = {
-                       viewModel.showAppListBottomSheet()
-                   },
-                    onCancelClick = {
-                        schedule = it
-                        viewModel.showDeleteBottomSheet()
-                    },
-                    appIconMap = viewModel.getAppIconMap().collectAsState().value
-                )
-
-                AppListBottomSheet(
-                    state = viewModel.showAppListBottomSheet.collectAsState().value,
-                    apps = data,
-                    onDismiss = {
-                        viewModel.hideAppListBottomSheet()
-                    },
-                    appIconMap = viewModel.getAppIconMap().collectAsState().value,
-                    onAppClick = {
-                        schedule = it
-                        viewModel.hideAppListBottomSheet()
-                        viewModel.showScheduleBottomSheet()
-                    }
-                )
-
-                CommonDeleteBottomSheet(
-                    state = viewModel.showDeleteBottomSheet.collectAsState().value,
-                    title = stringResource(R.string.are_you_sure),
-                    subTitle = "Launch of ${schedule?.appName} app will be cancelled",
-                    schedule = schedule,
-                    onDismiss = {
-                       viewModel.hideDeleteBottomSheet()
-                    }, onDelete = {
-                        viewModel.deleteSchedule(it)
-                    }, actionButtonText = getString(R.string.cancel_schedule)
-
-                )
-
-                /*ScheduleBottomSheet(
-                    state = viewModel.showScheduleBottomSheet.collectAsState().value,
-                    schedule = schedule,
-                    onDismiss = {
-                        viewModel.hideScheduleBottomSheet()
-                    },
-                    onCancelSchedule = {
-                        viewModel.deleteSchedule(schedule)
-                    },
-                    onSetSchedule = {
-                        Log.d("schedule_time", "$it")
-                        viewModel.scheduleAppLaunch(
-                            schedule?.packageName?:"",
-                            it
-                        )
-                    }
-                )*/
-
-                DateAndTimePickerDialog(
-                    state = viewModel.showScheduleBottomSheet.collectAsState().value,
-                    onDismiss = {
-                        viewModel.hideScheduleBottomSheet()
-                    },
-                    onSetSchedule = {
-                        viewModel.scheduleAppLaunch(
-                            schedule?.packageName?:"",
-                            it
-                        )
-                    }
-                )
-
+                AppNavigation(viewModel)
             }
         }
     }
@@ -150,6 +84,90 @@ class MainActivity : ComponentActivity() {
         return apps
     }
 }
+
+@Composable
+fun AppNavigation(viewModel: ScheduleViewModel) {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "home") {
+        composable("home") {
+            Dashboard(navController, viewModel)
+        }
+
+        composable("completedSchedules") {
+            CompletedSchedulesScreen(
+                onBackClick = { navController.popBackStack() }, viewModel = viewModel, onDeleteRecord = {
+                    viewModel.deleteRecord(it)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun Dashboard(navController: NavController,viewModel: ScheduleViewModel) {
+
+    val data = viewModel.allApps.collectAsState().value
+    var schedule: ScheduleEntity? by remember { mutableStateOf(null) }
+
+    HomeScreen(
+        apps = data.filter { it.isScheduled },
+        onAddClick = {
+            viewModel.showAppListBottomSheet()
+        },
+        onCancelClick = {
+            schedule = it
+            viewModel.showDeleteBottomSheet()
+        },
+        onHistoryClick = {
+            navController.navigate("completedSchedules")
+        },
+        appIconMap = viewModel.getAppIconMap().collectAsState().value
+    )
+
+    AppListBottomSheet(
+        state = viewModel.showAppListBottomSheet.collectAsState().value,
+        apps = data,
+        onDismiss = {
+            viewModel.hideAppListBottomSheet()
+        },
+        appIconMap = viewModel.getAppIconMap().collectAsState().value,
+        onAppClick = {
+            schedule = it
+            viewModel.hideAppListBottomSheet()
+            viewModel.showScheduleBottomSheet()
+        }
+    )
+
+    CommonDeleteBottomSheet(
+        state = viewModel.showDeleteBottomSheet.collectAsState().value,
+        title = stringResource(R.string.are_you_sure),
+        subTitle = "Launch of ${schedule?.appName} app will be cancelled",
+        schedule = schedule,
+        onDismiss = {
+            viewModel.hideDeleteBottomSheet()
+        }, onDelete = {
+            viewModel.deleteSchedule(it)
+        }, actionButtonText = stringResource(R.string.cancel_schedule)
+
+    )
+
+    DateAndTimePickerDialog(
+        state = viewModel.showScheduleBottomSheet.collectAsState().value,
+        onDismiss = {
+            viewModel.hideScheduleBottomSheet()
+        },
+        onSetSchedule = {
+            viewModel.scheduleAppLaunch(
+                schedule?.packageName?:"",
+                it
+            )
+        }
+    )
+}
+
+
+
 
 
 

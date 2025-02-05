@@ -24,6 +24,9 @@ interface ScheduleDao {
     @Query("UPDATE schedules SET completed = 1, completionTime =:timeInMillis WHERE packageName = :packageName")
     suspend fun markScheduleAsComplete(packageName :String, timeInMillis: Long)
 
+    @Query("UPDATE schedules SET completed = 0, completionTime = null WHERE packageName = :packageName")
+    suspend fun resetCompletedRecord(packageName :String)
+
     @Query("SELECT * FROM schedules WHERE packageName = :packageName LIMIT 1")
     suspend fun getScheduledInfo(packageName: String): ScheduleEntity?
 
